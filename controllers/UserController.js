@@ -3,7 +3,9 @@ class UserController{
     constructor(formId, tableId){
 
         this.formEl = document.getElementById(formId);
-        this.tableEl = document.getElementsById(tableId);
+        this.tableEl = document.getElementById(tableId);
+
+        this.onSubmit();
 
     }
 
@@ -12,8 +14,8 @@ class UserController{
 
         let user = {};
         //let é uma variável que só existe dentro de um bloco de código
-
-        this.formEl.elements.forEach(function(field, index){
+        //Spread (...) é um operador que possibilita que você não precise mostrar quantos índices o Array vai ter
+        [...this.formEl.elements].forEach(function(field, index){
 
             if(field.name == "gender" && field.checked){
                 
@@ -31,6 +33,23 @@ class UserController{
          return new User(user.name,user.gender,user.birth,user.country,user.email,user.password,user.photo,user.admin);
 
     }
+    //Pegando a foto anexada pelo usuário
+    getPhoto(){
+
+        let fileReader = new FileReader();
+        [...this.formEl.elements].filter(item=>{
+            if(item.name==="photo"){
+                return item;
+            }
+        })
+
+        fileReader.onload = ()=>{
+
+        };
+
+        fileReader.readAsDataURL();
+
+    }
 
     //Enviando valores do formulário
     onSubmit(){
@@ -40,18 +59,20 @@ class UserController{
 
             event.preventDefault();
 
-            let user = this.getValuesFromForm();
-            this.addLine(user);
+            let values=this.getValuesFromForm()
+            values.photo="";
+
+            this.addLine(values);
           
           })
           
     }
 
-    addLine(dataUser, tableId){
+    addLine(dataUser){
 
        this.tableEl.innerHTML=`
         <tr>
-             <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+             <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
              <td>${dataUser.name}</td>
              <td>${dataUser.email}</td>
              <td>${dataUser.admin}</td>
@@ -61,7 +82,7 @@ class UserController{
                   <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
              </td>
       </tr>`
-   
+
    
    }
 
