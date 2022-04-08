@@ -10,17 +10,21 @@ var admin = document.querySelector("#exampleInputAdmin");
 //Quando usarmos [] em um querySelector quer dizer que estamos fazendo um filtro
 //Quando usarmos : é quando estamos procurando uma condição
 
-var fields = document.querySelectorAll("#form-usr-created [name]");
+var fields = document.querySelectorAll("#form-user-create [name]");
+var user = {};
 fields.forEach(function(field, index){
 
    if(field.name == "gender" && field.checked){
        
-        console.log("foi :)");
+        user[field.name]=field.value;
 
    }
    else{
-       
+  
         console.log("nao foi :/");
+        user[field.name]=field.value;
 
    }
-})
+});
+
+console.log(user);
