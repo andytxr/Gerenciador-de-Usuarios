@@ -34,20 +34,28 @@ class UserController{
 
     }
     //Pegando a foto anexada pelo usuário
-    getPhoto(){
+    getPhoto(callback){
 
         let fileReader = new FileReader();
-        [...this.formEl.elements].filter(item=>{
+        let elements = [...this.formEl.elements].filter(item=>{
+
             if(item.name==="photo"){
+
                 return item;
+
             }
+
         })
+
+        let file = elements[0].files[0];
 
         fileReader.onload = ()=>{
 
+           callback(fileReader.result);
+
         };
 
-        fileReader.readAsDataURL();
+        fileReader.readAsDataURL(file);
 
     }
 
@@ -60,11 +68,15 @@ class UserController{
             event.preventDefault();
 
             let values=this.getValuesFromForm()
-            values.photo="";
 
-            this.addLine(values);
+            this.getPhoto((content) =>{
+
+                values.photo=content;
+                this.addLine(values);
+
+            });
           
-          })
+          });
           
     }
 
