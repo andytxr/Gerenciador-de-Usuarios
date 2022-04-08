@@ -1,17 +1,11 @@
-var name = document.querySelector("#exampleInputName");
-var gender = document.querySelector("#form-user-create [name=gender]:checked");
-var birth = document.querySelector("#exampleInputBirth");
-var country = document.querySelector("#exampleInputCountry");
-var email = document.querySelector("#exampleInputEmail");
-var password = document.querySelector("#exampleInputPassword");
-var photo = document.querySelector("#exampleInputFile");
-var admin = document.querySelector("#exampleInputAdmin");
-
 //Quando usarmos [] em um querySelector quer dizer que estamos fazendo um filtro
 //Quando usarmos : é quando estamos procurando uma condição
 
+//Criando JSON e filtrando os campos do formulário
 var fields = document.querySelectorAll("#form-user-create [name]");
 var user = {};
+
+//Exportando os valores do formulário para o JSON
 document.getElementById("form-user-create").addEventListener("submit", function(event){
 
 event.preventDefault();
@@ -29,7 +23,26 @@ fields.forEach(function(field, index){
      }
   });
 
-  console.log(user);
+  addLine(user);
 
 })
+
+//Adicionando linhas no Display
+function addLine(dataUser){
+
+     document.getElementById("table-users").innerHTML=`
+     <tr>
+          <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+          <td>${dataUser.name}</td>
+          <td>${dataUser.email}</td>
+          <td>${dataUser.admin}</td>
+          <td>${dataUser.birth}</td>
+          <td>
+               <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
+               <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
+          </td>
+   </tr>`
+
+
+}
 
