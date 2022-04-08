@@ -34,29 +34,33 @@ class UserController{
 
     }
     //Pegando a foto anexada pelo usuário
-    getPhoto(callback){
+    getPhoto(){
 
-        let fileReader = new FileReader();
-        let elements = [...this.formEl.elements].filter(item=>{
+        return new Promise((resolve, reject) => {
 
-            if(item.name==="photo"){
+            let fileReader = new FileReader();
 
-                return item;
+            let elements = [...this.formEl.elements].filter(item=>{
+
+              if(item.name==="photo") return item;
+
+            })
+
+            let file = elements[0].files[0];
+            fileReader.onload = ()=>{
+
+                resolve(fileReader.result);
+
+            };
+            fileReader.onerror=(e)=>{
+
+                reject(e);
 
             }
 
-        })
+            fileReader.readAsDataURL(file);
 
-        let file = elements[0].files[0];
-
-        fileReader.onload = ()=>{
-
-           callback(fileReader.result);
-
-        };
-
-        fileReader.readAsDataURL(file);
-
+        });
     }
 
     //Enviando valores do formulário
@@ -67,14 +71,20 @@ class UserController{
 
             event.preventDefault();
 
-            let values=this.getValuesFromForm()
+            let values=this.getValuesFromForm();
+            
+            this.getPhoto().then(
+                (content)=>{
 
-            this.getPhoto((content) =>{
+                    values.photo=content;
+                    this.addLine(values);
 
-                values.photo=content;
-                this.addLine(values);
+                },
+                (e)=>{
 
-            });
+                    console.error(e)
+
+                });
           
           });
           
