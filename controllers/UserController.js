@@ -102,9 +102,13 @@ class UserController{
             event.preventDefault();
             let submitBtn = this.formEl.querySelector("[type=submit]")
 
-            submitBtn.disabled=true
-
             let values=this.getValuesFromForm();
+
+            if(values !== false){
+
+                submitBtn.disabled=true
+
+            }
             
             this.getPhoto().then(
                 (content)=>{
@@ -130,6 +134,8 @@ class UserController{
 
         let tr = document.createElement('tr');
 
+        tr.dataset.user = JSON.stringify(dataUser);
+
         tr.innerHTML = ` 
             <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
             <td>${dataUser.name}</td>
@@ -144,6 +150,28 @@ class UserController{
 
        this.tableEl.appendChild(tr);
 
+       this.updateCount();
+
+   }
+
+   updateCount(){
+
+        let numUsers = 0;
+        let numAdmins = 0;
+
+        [...this.tableEl.children].forEach(tr =>{
+
+            numUsers++;
+            
+            let user = JSON.parse(tr.dataset.user);
+            if(user._admin){
+                numAdmins++;
+            }
+
+        })
+
+        document.querySelector("#number-users").innerHTML = numUsers;
+        document.querySelector("#number-admins").innerHTML = numAdmins;
    }
 
 }
