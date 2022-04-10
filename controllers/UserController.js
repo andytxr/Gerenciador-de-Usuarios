@@ -13,9 +13,18 @@ class UserController{
     getValuesFromForm(){
 
         let user = {};
+        let isValid = true;
+
         //let é uma variável que só existe dentro de um bloco de código
         //Spread (...) é um operador que possibilita que você não precise mostrar quantos índices o Array vai ter
         [...this.formEl.elements].forEach(function(field, index){
+
+            if(['name','email','password'].indexOf(field.name) > -1 && !field.value){
+
+                field.parentElement.classList.add("has-error")
+                isValid = false;
+
+            }
 
             if(field.name == "gender" && field.checked){
                 
@@ -34,6 +43,12 @@ class UserController{
          
             }
          });
+
+         if(!isValid){
+
+            return false;
+
+         }
        
          //Um objeto é uma variável que instancia/representa uma classe
          return new User(user.name,user.gender,user.birth,user.country,user.email,user.password,user.photo,user.admin);
