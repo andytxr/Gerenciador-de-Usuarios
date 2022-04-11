@@ -98,19 +98,6 @@ class UserController{
 
         });
     }
-    getUsersStorage(){
-
-        let users = [];
-
-        if(localStorage.getItem("users")){
-            
-            users=JSON.parse(localStorage.getItem("users"))
-
-        }
-
-        return users;
-
-    }
     getTr(dataUser, tr = null){
 
         //Null é utilizado para deixar um valor padrão
@@ -236,7 +223,7 @@ class UserController{
 
     selectAll(){
 
-        let users = this.getUsersStorage();
+        let users = User.getUsersStorage();
         users.forEach(dataUser=>{
 
             let user = new User();
@@ -298,6 +285,11 @@ class UserController{
 
             if(confirm("Tem certeza que quer exluir?")){
 
+                let user = new User();
+                
+                user.loadFromJSON(JSON.parse(tr.dataset.user));
+
+                user.removeUser();
                 tr.remove();
                 this.updateCount();
             }
