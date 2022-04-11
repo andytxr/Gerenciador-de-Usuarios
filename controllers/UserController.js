@@ -7,7 +7,7 @@ class UserController{
         this.tableEl = document.getElementById(tableId);
 
         this.onSubmit();
-        this.onCancel();
+        this.onEdit();
 
     }
 
@@ -66,7 +66,7 @@ class UserController{
 
             let fileReader = new FileReader();
 
-            let elements = [formEl.elements].filter(item=>{
+            let elements = [...formEl.elements].filter(item=>{
 
               if(item.name==="photo") return item;
 
@@ -86,7 +86,7 @@ class UserController{
             
             if(file){
 
-                file.readAsDataURL(file);
+                fileReader.readAsDataURL(file);
 
             }
             else{
@@ -137,7 +137,7 @@ class UserController{
           
     }
     //Cancelando edição do usuário
-    onCancel(){
+    onEdit(){
 
         document.querySelector("#box-user-update .btn-cancel").addEventListener("click", e=>{
             this.showPanelCreate();
@@ -152,17 +152,15 @@ class UserController{
 
             let values = this.getValuesFromForm(this.formUpdateEl);
             let index = this.formUpdateEl.dataset.trIndex;
+            let tr = this.tableEl.rows[index]
             let userOld = JSON.parse(tr.dataset.user);
             let result = Object.assign({}, userOld, values);
-            let tr = this.tableEl.rows[index]
-            
-
             
 
             this.getPhoto(this.formUpdateEl).then(
                 (content)=>{
                     
-                    if(!values.photo){
+                    if(content==="dist/img/boxed-bg.jpg"){
 
                         result._photo=userOld._photo;
                 
@@ -184,12 +182,11 @@ class UserController{
                             <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
                         </td>
                     `;
-
-                    values.photo=content;
+                    
+                    this.addEventsTr(tr);
+                    this.updateCount();  
                     this.formUpdateEl.reset();
                     submitBtn.disabled=false;
-                    this.addEventsTr(tr);
-                    this.updateCount();
                     this.showPanelCreate();
 
                 },
@@ -271,7 +268,7 @@ class UserController{
         
             for (let name in json){
 
-                let field = form.querySelector("[name=" + name.replace("_", "") +"]");
+                let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") +"]");
                 if (field) {
 
                     switch(field.type){
