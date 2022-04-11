@@ -162,7 +162,7 @@ class UserController{
                 (content)=>{
 
                     values.photo=content;
-                    this.insertToStorage(values);
+                    values.saveUser();
 
                     this.addLine(values);    
                     this.formEl.reset();
@@ -211,9 +211,11 @@ class UserController{
                         result._photo = content;
                         
                     }
+
                     let user = new User();
                     user.loadFromJSON(result);
-                    
+                    user.saveUser();
+
                     this.getTr(user, tr);
 
                     this.updateCount();  
@@ -245,17 +247,8 @@ class UserController{
 
     }
 
-    insertToStorage(data){
-
-        let users = this.getUsersStorage();
-
-        users.push(data);
-        localStorage.setItem("users", JSON.stringify(users))
-
-    }
 
     //Display do projeto
-
     addLine(dataUser){
 
         let tr = this.getTr(dataUser);
