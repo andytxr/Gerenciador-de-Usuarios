@@ -8,6 +8,7 @@ class UserController{
 
         this.onSubmit();
         this.onEdit();
+        this.selectAll();
 
     }
 
@@ -97,6 +98,19 @@ class UserController{
 
         });
     }
+    getUsersStorage(){
+
+        let users = [];
+
+        if(sessionStorage.getItem("users")){
+            
+            users=JSON.parse(sessionStorage.getItem("users"))
+
+        }
+
+        return users;
+
+    }
 
     //Botões do formulário
 
@@ -121,8 +135,9 @@ class UserController{
                 (content)=>{
 
                     values.photo=content;
-                    this.addLine(values);
+                    this.insertToStorage(values);
 
+                    this.addLine(values);    
                     this.formEl.reset();
                     submitBtn.disabled=false;
 
@@ -136,7 +151,7 @@ class UserController{
         });
           
     }
-    //Cancelando edição do usuário
+    //Edição do usuário
     onEdit(){
 
         document.querySelector("#box-user-update .btn-cancel").addEventListener("click", e=>{
@@ -197,6 +212,30 @@ class UserController{
             });
 
         })
+
+    }
+
+    
+
+    selectAll(){
+
+        let users = this.getUsersStorage();
+        users.forEach(dataUser=>{
+
+            let user = new User();
+            user.loadFromJSON(dataUser);
+            this.addLine(user);
+
+        })
+
+    }
+
+    insertToStorage(data){
+
+        let users = this.getUsersStorage();
+
+        users.push(data);
+        sessionStorage.setItem("users", JSON.stringify(users))
 
     }
 

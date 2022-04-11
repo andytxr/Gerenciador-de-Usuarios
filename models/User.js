@@ -74,5 +74,26 @@ class User{
 
     }
 
+    loadFromJSON(json){
+
+        //For In - a cada nome que você achar no JSON, faça.
+       for(let name in json){
+           
+            if(name==="_register"){
+
+                this[name] = new Date(json[name]);
+
+            }
+            else{
+
+                this[name] = json[name];
+                
+            }
+            
+
+       } 
+
+    }
+
 
 }
